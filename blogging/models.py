@@ -9,3 +9,6 @@ class Post(models.Model):
     created = models.DateTimeField(auto_now_add=True) # stamps time at first save
     modified = models.DateTimeField(auto_now=True) # updates field to now every save
     published = models.DateTimeField(blank=True, null=True) # can be blank if not published
+
+    def __str__(self):
+        return self.title
