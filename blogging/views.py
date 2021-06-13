@@ -25,3 +25,21 @@ def list_view(request):
     context = {'posts': posts}
     body = template.render(context)
     return HttpResponse(body, content_type="text/html")
+
+def detail_view(request, post_id):
+    published = Post.objects.exclude(published__exact=None)
+    try:
+        post = published.get(pk=post_id)
+
+    except Post.DoesNotExist:
+        raise Http404
+
+    template = loader.get_template('blogging/detail.html')
+    context = {'post': post}
+    body = template.render(context)
+    return HttpResponse(body, content_type="text/html")
+
+'''
+    context = {'post': post}
+    return render(request, 'blogging/detail.html', context)
+'''

@@ -26,7 +26,6 @@ class CategoryTestCase(TestCase):
         actual = str(c1)
         self.assertEqual(expected, actual)
 
-
 class FrontEndTestCase(TestCase):
     fixtures = ['blogging_test_fixture.json', ]
 
@@ -49,11 +48,24 @@ class FrontEndTestCase(TestCase):
         resp_text = resp.content.decode(resp.charset)
         self.assertTrue('Recent Posts' in resp_text)
 
-        for i in range(1, 11):
-            title = f'Post {i} Title'
+        for count in range(1, 11):
+            title = f'Post {count} Title'
 
-            if i < 6:
+            if count < 6:
                 self.assertContains(resp, title, count=1)
 
             else:
                 self.assertNotContains(resp, title)
+
+    def test_details_only_published(self):
+        for count in range(1, 11):
+            title = f'Post {count} Title'
+            post = Post.objects.get(title=title)
+            resp = self.client.get(f'/posts/%d/' % post.pk)
+ 
+            if count < 6:
+                self.assertEqual(resp.status_code, 200)
+                self.assertContains(resp, title)
+
+            else:
+                self.assertEqual(resp.status_code, 404)
