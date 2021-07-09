@@ -13,6 +13,14 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
+#
+#    class Meta:
+#        ordering = ["-published"]
+#
+#    def get_absolute_url(self):
+#        from django.urls import reverse
+#        return reverse("post_detail")
+#
 
 class Category(models.Model):
     name = models.CharField(max_length=128)
