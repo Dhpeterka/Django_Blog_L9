@@ -1,4 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django import forms
+from django.utils import timezone
+from blogging.forms import PostForm
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.template import loader
 
@@ -38,6 +41,21 @@ def detail_view(request, post_id):
     context = {'post': post}
     body = template.render(context)
     return HttpResponse(body, content_type="text/html")
+
+def new_post(request):
+    if request.method == "POST":
+        form = PostForm(request.POST)
+        if form.is_valid():
+            model_instance = form.save(commit=False)
+            model_instance.published = timezone.now()
+            model_instance.author = request.user
+            model_instance = form.save()
+            return redirect('/')
+    
+    else:
+        form = PostForm()
+        
+    return render(request, 'blogging/form_template.html',{'form': form})
 
 '''
     context = {'post': post}
