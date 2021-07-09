@@ -8,7 +8,6 @@ class LatestPosts(Feed):
     description = "New/Updated Posts from Blog"
 
     def items(self):
-#        return Post.objects.filter(status=1)
         return Post.objects.order_by('-published')[:5]
 
     def item_title(self, item):
